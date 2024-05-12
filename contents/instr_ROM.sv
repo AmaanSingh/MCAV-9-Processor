@@ -10,6 +10,7 @@ module instr_ROM #(parameter D=12)(
     $readmemb("mach_code.txt",core);
 
   always_comb  mach_code = core[prog_ctr];
+  // nothing in this file. just send it to decoder
 
 endmodule
 

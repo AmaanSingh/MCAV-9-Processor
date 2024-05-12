@@ -1,4 +1,4 @@
-// 8-bit wide, 256-word (byte) deep memory array
+// 8-bit wide, 256-word (byte) deep memory array // Don't do stack, just do a normal load and store
 module dat_mem (
   input[7:0] dat_in,
   input      clk,
@@ -7,6 +7,7 @@ module dat_mem (
   output logic[7:0] dat_out);
 
   logic[7:0] core[256];       // 2-dim array  8 wide  256 deep
+
 
 // reads are combinational; no enable or clock required
   assign dat_out = core[addr];

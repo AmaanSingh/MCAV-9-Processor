@@ -1,5 +1,6 @@
 // cache memory/register file
 // default address pointer width = 4, for 16 registers
+//Not much to change here but maybe flags
 module reg_file #(parameter pw=3)(
   input[7:0] dat_in,
   input      clk,
