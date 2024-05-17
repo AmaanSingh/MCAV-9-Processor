@@ -7,7 +7,7 @@ module alu(
   input        [1:0] C_op,
   input        [2:0] A_op,
   input              V_op,
-  input[7:0] inA, inB,	 // 8-bit wide data path
+  input [7:0] inA, inB,	 // 8-bit wide data path
   input      sc_i,       // shift_carry in
   output logic[7:0] rslt,
   output logic sc_o,     // shift_carry out
@@ -28,10 +28,10 @@ always_comb begin
         3'b000: // add 2 8-bit unsigned; automatically makes carry-out
           {sc_o,rslt} = inA + inB + sc_i;
 	      3'b001: // subtract
-          {sc_o,rslt} = inA - inB + sc_i;
+          {sc_o,rslt} = inA - inB + sc_i; //subtract fix needed
         3'b010: // bitwise AND (mask) 
-          rslt = inA & inB;
-        3'b011: // bitwise OR
+          rslt = inA & inB;  //fix needed
+        3'b011: // bitwise OR 
           rslt = inA | inB;
 	      3'b100: // bitwise XOR
           rslt = inA ^ inB;
