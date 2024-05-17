@@ -1,7 +1,8 @@
 // combinational -- no clock
 // sample -- change as desired
+//finished
 module alu(
-  input[2:0] alu_cmd,    // ALU instructions
+  //input[2:0] alu_cmd,    // ALU instructions
   input [1:0] Type,
   input        [2:0] M_op,
   input        [1:0] C_op,
@@ -35,12 +36,12 @@ always_comb begin
           rslt = inA | inB;
 	      3'b100: // bitwise XOR
           rslt = inA ^ inB;
-	      3'b101: // left_shift // right shift (alternative syntax -- works like left shift
-          {sc_o,rslt} = {inA, sc_i};
+	      3'b101: // left_shift
+          rslt = inB << inA;
 	      3'b110: // right shift (alternative syntax -- works like left shift
-	        {rslt,sc_o} = {sc_i,inA};
+          rslt = inB >> inA;
 	      3'b111: // Not
-	        rslt = !inA;
+	        rslt = ~inA;
       endcase
   end
   if (Type == 2'b01) begin
@@ -66,27 +67,6 @@ always_comb begin
         rslt = inA;
     endcase
   end
-  /*
-  case(alu_cmd)
-    3'b000: // add 2 8-bit unsigned; automatically makes carry-out
-      {sc_o,rslt} = inA + inB + sc_i;
-	3'b001: // subtract
-    {sc_o,rslt} = inA - inB + sc_i;
-    3'b010: // bitwise AND (mask) 
-    rslt = inA & inB;
-    3'b011: // bitwise OR
-    rslt = inA | inB;
-	3'b100: // bitwise XOR
-    rslt = inA ^ inB;
-	3'b101: // left_shift // right shift (alternative syntax -- works like left shift
-    {sc_o,rslt} = {inA, sc_i};
-	3'b110: // right shift (alternative syntax -- works like left shift
-	  {rslt,sc_o} = {sc_i,inA};
-	3'b111: // Not
-	  rslt = !inA;
-  endcase
-  */
-  
 end
    
 endmodule

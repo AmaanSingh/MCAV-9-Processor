@@ -23,8 +23,14 @@ module top_level(
         MemWrite,
         ALUSrc;		              // immediate switch
   wire[A-1:0] alu_cmd;
+  wire        [1:0]  Type;
+  wire        [2:0] M_op,
+  wire        [1:0] C_op,
+  wire        [2:0] A_op,
+  wire              V_op,
   wire[8:0]   mach_code;          // machine code
   wire[2:0] rd_addrA, rd_adrB;    // address pointers to reg_file
+  wire[1:0] rd_addrA_M_A, rd_addrB_M_A //M and A registers
 // fetch subassembly
   PC #(.D(D)) 					  // D sets program counter width
      pc1 (.reset            ,
@@ -57,6 +63,16 @@ module top_level(
   assign rd_addrB = mach_code[5:3];
   assign alu_cmd  = mach_code[8:6];
 
+  assign Type = mach_code[8:7];
+  assign M_op = mach_code[6:4];
+  assign C_op = mach_code[6:5];
+  assign A_op = mach_code[6:4];
+  assign V_op = mach_code[6];
+  assign rd_addrA_M_A = mach_code[3:2]; // for math and assignment registers
+  assign rd_addrB_M_A = mach_code[1:0]; // for math and assignment registers
+
+  //maybe mux for addrA and rd_addrA_M_A assign muxB = ALUSrc? rd_addrA : rd_addrA_M_A;
+
   reg_file #(.pw(3)) rf1(.dat_in(regfile_dat),	   // loads, most ops
               .clk         ,
               .wr_en   (RegWrite),
@@ -68,8 +84,14 @@ module top_level(
 
   assign muxB = ALUSrc? immed : datB;
 
-  alu alu1(.alu_cmd(),
-         .inA    (datA),
+  alu alu1(
+     //.alu_cmd(),
+     .Type(Type),
+     .M_op(M_op),
+     .C_op(C_op),
+     .A_op(A_op),
+     .V_op(V_op),
+     .inA    (datA),
 		 .inB    (muxB),
 		 .sc_i   (sc),   // output from sc register
 		 .rslt       ,
