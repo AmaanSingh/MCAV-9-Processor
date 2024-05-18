@@ -11,6 +11,8 @@ module top_level(
   wire[7:0]   datA,datB,		  // from RegFile
               muxB, 
 			  rslt,               // alu output
+        regfile_dat,
+        mux_dat_in,
               immed;
   logic sc_in,   				  // shift/carry out from/to ALU
    		pariQ,              	  // registered parity flag from ALU
@@ -18,19 +20,26 @@ module top_level(
   wire  relj;                     // from control to PC; relative jump enable
   wire  pari,
         zero,
+        regdt,
 		sc_clr,
 		sc_en,
         MemWrite,
-        ALUSrc;		              // immediate switch
+        MemtoReg,
+        ALUSrc,
+        REGSrc;		              // immediate switch
   wire[A-1:0] alu_cmd;
-  wire        [1:0]  Type;
+  wire        [1:0] Type;
   wire        [2:0] M_op,
   wire        [1:0] C_op,
   wire        [2:0] A_op,
   wire              V_op,
   wire[8:0]   mach_code;          // machine code
-  wire[2:0] rd_addrA, rd_adrB;    // address pointers to reg_file
+  wire[5:0]   how_high;
+  wire[2:0] rd_addrA, rd_adrB, mux_addrA, mux_addrB;    // address pointers to reg_file
   wire[1:0] rd_addrA_M_A, rd_addrB_M_A //M and A registers
+
+assign how_high = mach_code[5:0];
+
 // fetch subassembly
   PC #(.D(D)) 					  // D sets program counter width
      pc1 (.reset            ,
@@ -50,18 +59,22 @@ module top_level(
                .mach_code);
 
 // control decoder
-  Control ctl1(.instr(),
-  .RegDst  (), 
+  Control ctl1(.instr(mach_code),
+  .RegDst  (regdt), 
   .Branch  (relj)  , 
   .MemWrite , 
   .ALUSrc   , 
+  .REGSrc   ,
+  .Cmpfl    ,
   .RegWrite   ,     
-  .MemtoReg(),
-  .ALUOp());
+  .MemtoReg(MemtoReg),
+  //.ALUOp()
+  );
 
+  //INSTRUCTION DECODERS
   assign rd_addrA = mach_code[2:0];
   assign rd_addrB = mach_code[5:3];
-  assign alu_cmd  = mach_code[8:6];
+  //assign alu_cmd  = mach_code[8:6];
 
   assign Type = mach_code[8:7];
   assign M_op = mach_code[6:4];
@@ -72,13 +85,19 @@ module top_level(
   assign rd_addrB_M_A = mach_code[1:0]; // for math and assignment registers
 
   //maybe mux for addrA and rd_addrA_M_A assign muxB = ALUSrc? rd_addrA : rd_addrA_M_A;
+  assign mux_addrA = REGSrc? rd_addrA : {1'b0, rd_addrA_M_A }; //changes whether 
+  assign mux_addrB = REGSrc? rd_addrA : {1'b0, rd_addrA_M_A };
 
-  reg_file #(.pw(3)) rf1(.dat_in(regfile_dat),	   // loads, most ops
+  assign mux_dat_in = MemtoReg? regfile_dat : rslt;
+
+  reg_file #(.pw(3)) rf1(
+              //.dat_in(regfile_dat),	   // loads, most ops
+              .dat_in(mux_dat_in),
               .clk         ,
               .wr_en   (RegWrite),
-              .rd_addrA(rd_addrA),
-              .rd_addrB(rd_addrB),
-              .wr_addr (rd_addrB),      // in place operation
+              .rd_addrA(mux_addrA),
+              .rd_addrB(mux_addrB),
+              .wr_addr (mux_addrB),      // in place operation
               .datA_out(datA),
               .datB_out(datB)); 
 
@@ -102,7 +121,7 @@ module top_level(
              .clk           ,
 			 .wr_en  (MemWrite), // stores
 			 .addr   (datA),
-             .dat_out());
+             .dat_out(regfile_dat));
 
 // registered flags from ALU
   always_ff @(posedge clk) begin
