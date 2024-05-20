@@ -10,7 +10,7 @@ assign Type  = instr[8:7];
 assign M_op = instr[6:4];
 assign C_op = instr[6:5];
 assign A_op = instr[6:4];
-assign V_op = instr[6]
+assign V_op = instr[6];
 
 // do this one last. General overview of what to do for you.
 always_comb begin

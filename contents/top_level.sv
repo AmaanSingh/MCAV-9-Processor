@@ -25,18 +25,19 @@ module top_level(
 		sc_en,
         MemWrite,
         MemtoReg,
+        Cmpfl,
         ALUSrc,
         REGSrc;		              // immediate switch
   wire[A-1:0] alu_cmd;
   wire        [1:0] Type;
-  wire        [2:0] M_op,
-  wire        [1:0] C_op,
-  wire        [2:0] A_op,
-  wire              V_op,
+  wire        [2:0] M_op;
+  wire        [1:0] C_op;
+  wire        [2:0] A_op;
+  wire              V_op;
   wire[8:0]   mach_code;          // machine code
   wire[5:0]   how_high;
   wire[2:0] rd_addrA, rd_adrB, mux_addrA, mux_addrB;    // address pointers to reg_file
-  wire[1:0] rd_addrA_M_A, rd_addrB_M_A //M and A registers
+  wire[1:0] rd_addrA_M_A, rd_addrB_M_A; //M and A registers
 
 assign how_high = mach_code[5:0];
 
@@ -67,7 +68,7 @@ assign how_high = mach_code[5:0];
   .REGSrc   ,
   .Cmpfl    ,
   .RegWrite   ,     
-  .MemtoReg(MemtoReg),
+  .MemtoReg(MemtoReg)
   //.ALUOp()
   );
 
