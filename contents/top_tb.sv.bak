@@ -17,14 +17,9 @@ module tb_top_level();
     .req(req),
     .done(done)
   );
-    /*
-    logic [D-1:0] core [0:A-1];
-
    initial begin 
-	  uut.core[0] = 0;
-    uut.core[1] = 1;
+	uut.core[]
    end
-   */
 
   // Clock generation
   initial begin
@@ -40,8 +35,7 @@ module tb_top_level();
 
     // Apply reset
     #10 reset = 0;
-    //#10 reset = 1;
-
+    #10 reset = 1;
 
     // Test case 1: Simple operation
     #10 req = 1; // Start the operation

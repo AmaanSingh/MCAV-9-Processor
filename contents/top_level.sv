@@ -41,6 +41,8 @@ module top_level(
 
 assign how_high = mach_code[5:0];
 
+assign sc_clr = reset; //might need to change to control file
+
 // fetch subassembly
   PC #(.D(D)) 					  // D sets program counter width
      pc1 (.reset            ,
@@ -77,6 +79,7 @@ assign how_high = mach_code[5:0];
   assign rd_addrB = mach_code[5:3];
   //assign alu_cmd  = mach_code[8:6];
 
+  
   assign Type = mach_code[8:7];
   assign M_op = mach_code[6:4];
   assign C_op = mach_code[6:5];
@@ -84,16 +87,23 @@ assign how_high = mach_code[5:0];
   assign V_op = mach_code[6];
   assign rd_addrA_M_A = mach_code[3:2]; // for math and assignment registers
   assign rd_addrB_M_A = mach_code[1:0]; // for math and assignment registers
+  assign immed = mach_code[3:0];
+
 
   //maybe mux for addrA and rd_addrA_M_A assign muxB = ALUSrc? rd_addrA : rd_addrA_M_A;
   assign mux_addrA = REGSrc? rd_addrA : {1'b0, rd_addrA_M_A }; //changes whether 
-  assign mux_addrB = REGSrc? rd_addrA : {1'b0, rd_addrA_M_A };
+  assign mux_addrB = REGSrc? rd_addrB : {1'b0, rd_addrB_M_A };
 
-  assign mux_dat_in = MemtoReg? regfile_dat : rslt;
+  assign mux_dat_in = MemtoReg? regfile_dat : rslt; //output of regfile or rslt
+  //assign mux_addr_reg = MemtoReg? regfile_dat : rslt; //output of regfile or rslt
+  
+
 
   reg_file #(.pw(3)) rf1(
               //.dat_in(regfile_dat),	   // loads, most ops
               .dat_in(mux_dat_in),
+              .ALUSrc (ALUSrc),
+              .immed (immed),
               .clk         ,
               .wr_en   (RegWrite),
               .rd_addrA(mux_addrA),
@@ -113,10 +123,11 @@ assign how_high = mach_code[5:0];
      .V_op(V_op),
      .inA    (datA),
 		 .inB    (muxB),
-		 .sc_i   (sc),   // output from sc register
+		 .sc_i   (sc_in),   // output from sc register
 		 .rslt       ,
 		 .sc_o   (sc_o), // input to sc register
-		 .pari  );  
+		 .pari,  
+     .zero);  
 
   dat_mem dm1(.dat_in(datB)  ,  // from reg_file
              .clk           ,

@@ -6,6 +6,10 @@ module Control #(parameter opwidth = 3, mcodebits = 2)(
   //output logic[opwidth-1:0] ALUOp
   );	   // for up to 8 ALU operations
 
+  logic [1:0] Type, C_op;
+  logic [2:0] A_op, M_op;
+  logic V_op;
+
 assign Type  = instr[8:7];
 assign M_op = instr[6:4];
 assign C_op = instr[6:5];
@@ -173,7 +177,7 @@ always_comb begin
         ALUSrc 	=	'b0;  
         RegWrite  =	'b1;  
         MemtoReg  =	'b1;
-        REGSrc = 'b0;
+        REGSrc = 'b1;
       end
       'b011: begin //store
         RegDst 	=   'b0;   

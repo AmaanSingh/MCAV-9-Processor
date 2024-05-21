@@ -3,6 +3,8 @@
 //Not much to change here but maybe flags
 module reg_file #(parameter pw=3)(
   input[7:0] dat_in,
+  input[7:0] immed,
+  input      ALUSrc,
   input      clk,
   input      wr_en,           // write enable
   input[pw-1:0] wr_addr,		  // write address pointer
@@ -20,7 +22,10 @@ module reg_file #(parameter pw=3)(
 // writes are sequential (clocked)
   always_ff @(posedge clk)
     if(wr_en)				   // anything but stores or no ops
-      core[wr_addr] <= dat_in; 
+		if(ALUSrc)
+        	core[8'b0] <= immed;
+      	else 	
+      		core[wr_addr] <= dat_in; 
 
 endmodule
 /*

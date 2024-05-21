@@ -14,7 +14,7 @@ module dat_mem (
 
 // writes are sequential (clocked) -- occur on stores or pushes 
   always_ff @(posedge clk)
-    if(wr_en)				  // wr_en usually = 0; = 1 		
+    if(wr_en)				  // wr_en usually = 0; = 1	
       core[addr] <= dat_in; 
 
 endmodule
