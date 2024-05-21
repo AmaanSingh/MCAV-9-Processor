@@ -75,8 +75,8 @@ assign sc_clr = reset; //might need to change to control file
   );
 
   //INSTRUCTION DECODERS
-  assign rd_addrB = mach_code[2:0];
-  assign rd_addrA = mach_code[5:3];
+  assign rd_addrA = mach_code[2:0];
+  assign rd_addrB = mach_code[5:3];
   //assign alu_cmd  = mach_code[8:6];
 
   

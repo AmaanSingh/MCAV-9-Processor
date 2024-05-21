@@ -177,12 +177,12 @@ always_comb begin
         ALUSrc 	=	'b0;  
         RegWrite  =	'b1;  
         MemtoReg  =	'b1;
-        REGSrc = 'b1;
+        REGSrc = 'b0;
       end
       'b011: begin //store
         RegDst 	=   'b0;   
         Branch 	=   'b0;   
-        MemWrite  =	'b0;   
+        MemWrite  =	'b1;   
         ALUSrc 	=	'b0;  
         RegWrite  =	'b0;  
         MemtoReg  =	'b0;
