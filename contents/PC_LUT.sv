@@ -8,6 +8,8 @@ module PC_LUT #(parameter D=12)(
 	1: target = 20;   // go ahead 20 spaces
 	2: target = '1;   // go back 1 space   1111_1111_1111
 	3: target = -20;
+	4: target = -3;
+	5: target = 2;
 	default: target = 'b0;  // hold PC  
   endcase
 

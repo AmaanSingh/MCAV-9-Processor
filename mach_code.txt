@@ -1,0 +1,16 @@
+100000001 //Load $1 to reg 0
+100000011 //Load $3 to reg 0
+110000001 //mov reg 0 to reg 1
+100000001 //Load $1 to reg 0
+000000001 //add reg 0 and reg1 and put into reg1
+100000000 //Load $0 to reg 0
+100110001 //Store to datamem[$r0] = r1
+100100000 //load to r0 = datamem[$r0]
+100000011 //load $3 to r0
+101000100 //cmp r1 r0
+010100101 //bg $5
+100000100 //load $4 to r0
+100000001 //load $1 to r0
+111000101 //jmp $5         
+100000101 //load $5 to r0
+100000001 //load $1 to r0

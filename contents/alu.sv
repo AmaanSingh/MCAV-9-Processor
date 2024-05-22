@@ -13,7 +13,8 @@ module alu(
   output logic[7:0] rslt,
   output logic sc_o,     // shift_carry out
                pari,     // reduction XOR (output)
-			   zero      // NOR (output)
+			   zero,      // NOR (output)
+  output logic [1:0] cmp_src       
 );
 
 //add different types with their math instructions such as mov and cmp. cmp should subtract one from the other and 
@@ -56,7 +57,16 @@ always_comb begin
     //Assignment
     case(A_op)
       'b100: //Cmp
-        {sc_o,rslt} = inA - inB + sc_i;
+        //{sc_o,rslt} = inA - inB + sc_i;
+        if (inA == inB) begin
+          cmp_src = 2'b00; //eq
+        end else if (inA > inB) begin
+          cmp_src = 2'b01; //bg
+        end else if (inA < inB) begin
+          cmp_src = 2'b10; //bl
+        end else if (inA != inB) begin
+          cmp_src = 2'b11; //bne
+        end
     endcase
   end
   if (Type == 2'b11) begin

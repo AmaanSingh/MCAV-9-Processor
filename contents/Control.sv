@@ -2,7 +2,7 @@
 module Control #(parameter opwidth = 3, mcodebits = 2)(
   input [8:0] instr,    // subset of machine code (any width you need)
   output logic RegDst, Branch, 
-     MemtoReg, MemWrite, ALUSrc, RegWrite, REGSrc, Cmpfl
+     MemtoReg, MemWrite, ALUSrc, RegWrite, REGSrc, Cmpfl, Beq, Bne, Bl, Bg, Jump
   //output logic[opwidth-1:0] ALUOp
   );	   // for up to 8 ALU operations
 
@@ -26,7 +26,12 @@ always_comb begin
   RegWrite  =	'b1;   // 0: for store or no op  1: most other operations 
   MemtoReg  =	'b0;   // 1: load -- route memory instead of ALU to reg_file data in
   REGSrc = 'b0;    //for reg 1: 3 or 2 for registers 
-  Cmpfl = 'b0; //Compare flag - work in proress
+  Beq = 'b0;
+  Bne = 'b0; 
+  Bl = 'b0;
+  Bg = 'b0;
+  Cmpfl = 'b0;
+  Jump = 'b0;
   //ALUOp	    =   'b111; // y = a+0;
 // sample values only -- use what you need
   if (Type == 2'b00) begin
@@ -116,36 +121,44 @@ always_comb begin
         Branch 	=   'b1;   
         MemWrite  =	'b0;   
         ALUSrc 	=	'b0;  
-        RegWrite  =	'b1;  
+        RegWrite  =	'b0;  
         MemtoReg  =	'b0;
         REGSrc = 'b0;
+        Bl = 'b1;
+        Cmpfl = 'b1;
       end
       'b01: begin //bg
         RegDst 	=   'b0;   
         Branch 	=   'b1;   
         MemWrite  =	'b0;   
         ALUSrc 	=	'b0;  
-        RegWrite  =	'b1;  
+        RegWrite  =	'b0;  
         MemtoReg  =	'b0;
         REGSrc = 'b0;
+        Bg = 'b1;
+        Cmpfl = 'b1;
       end
       'b10: begin //bne
         RegDst 	=   'b0;   
         Branch 	=   'b1;   
         MemWrite  =	'b0;   
         ALUSrc 	=	'b0;  
-        RegWrite  =	'b1;  
+        RegWrite  =	'b0;  
         MemtoReg  =	'b0;
         REGSrc = 'b0;
+        Bne = 'b1;
+        Cmpfl = 'b1; 
       end
       'b11: begin //beq
         RegDst 	=   'b0;   
         Branch 	=   'b1;   
         MemWrite  =	'b0;   
         ALUSrc 	=	'b0;  
-        RegWrite  =	'b1;  
+        RegWrite  =	'b0;  
         MemtoReg  =	'b0;
         REGSrc = 'b0;
+        Beq = 'b1;
+        Cmpfl = 'b1;
       end
     endcase
   end
@@ -193,7 +206,7 @@ always_comb begin
         Branch 	=   'b0;   
         MemWrite  =	'b0;   
         ALUSrc 	=	'b0;  
-        RegWrite  =	'b1;  
+        RegWrite  =	'b0;  
         MemtoReg  =	'b0;
         REGSrc = 'b0;
       end
@@ -241,13 +254,14 @@ always_comb begin
       end
       //jmp
       'b1: begin
-        RegDst 	=   'b0;   
-          Branch 	=   'b0;   
+          RegDst 	=   'b0;   
+          Branch 	=   'b1;   
           MemWrite  =	'b0;   
           ALUSrc 	=	'b0;  
-          RegWrite  =	'b1;  
+          RegWrite  =	'b0;  
           MemtoReg  =	'b0;
           REGSrc = 'b0;
+          Jump = 'b1;
       end
     endcase
   end

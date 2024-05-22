@@ -27,9 +27,15 @@ module top_level(
         MemtoReg,
         Cmpfl,
         ALUSrc,
+        test,
+        Beq,
+        Bne,
+        Bl,
+        Bg,
+        Jump,
         REGSrc;		              // immediate switch
   wire[A-1:0] alu_cmd;
-  wire        [1:0] Type;
+  wire        [1:0] Type, cmp_src;
   wire        [2:0] M_op;
   wire        [1:0] C_op;
   wire        [2:0] A_op;
@@ -39,9 +45,9 @@ module top_level(
   wire[2:0] rd_addrA, rd_adrB, mux_addrA, mux_addrB;    // address pointers to reg_file
   wire[1:0] rd_addrA_M_A, rd_addrB_M_A; //M and A registers
 
-assign how_high = mach_code[5:0];
-
 assign sc_clr = reset; //might need to change to control file
+
+assign how_high = Cmpfl? {1'b0, mach_code[4:0]} :  mach_code[5:0];
 
 // fetch subassembly
   PC #(.D(D)) 					  // D sets program counter width
@@ -50,7 +56,14 @@ assign sc_clr = reset; //might need to change to control file
 		 .reljump_en (relj),
 		 .absjump_en (absj),
 		 .target           ,
-		 .prog_ctr          );
+		 .prog_ctr,
+     .Beq,
+     .Bne,
+     .Bl,
+     .Bg,
+     .test,
+     .Jump,
+     .cmp_src        );
 
 // lookup table to facilitate jumps/branches
   PC_LUT #(.D(D))
@@ -69,8 +82,13 @@ assign sc_clr = reset; //might need to change to control file
   .ALUSrc   , 
   .REGSrc   ,
   .Cmpfl    ,
-  .RegWrite   ,     
-  .MemtoReg(MemtoReg)
+  .RegWrite   , 
+  .Jump    ,    
+  .MemtoReg(MemtoReg),
+  .Beq, //put these in pc and result to see if they match 
+  .Bne,
+  .Bl,
+  .Bg
   //.ALUOp()
   );
 
@@ -127,7 +145,8 @@ assign sc_clr = reset; //might need to change to control file
 		 .rslt       ,
 		 .sc_o   (sc_o), // input to sc register
 		 .pari,  
-     .zero);  
+     .zero,
+     .cmp_src );  
 
   dat_mem dm1(.dat_in(datB)  ,  // from reg_file
              .clk           ,
