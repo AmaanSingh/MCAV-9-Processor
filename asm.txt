@@ -1,0 +1,4 @@
+li $2 #load $2 to r0
+mov r0 r1 
+li $1 
+add r0 r2

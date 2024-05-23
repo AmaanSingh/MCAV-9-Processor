@@ -62,6 +62,17 @@ always_comb begin
             rslt = rslt + 1;
           end
         end
+      'b100: //Cmp
+        //{sc_o,rslt} = inA - inB + sc_i;
+        if (inA == inB) begin
+          cmp_src = 2'b00; //eq
+        end else if (inA > inB) begin
+          cmp_src = 2'b01; //bg
+        end else if (inA < inB) begin
+          cmp_src = 2'b10; //bl
+        end else if (inA != inB) begin
+          cmp_src = 2'b11; //bne
+        end
     endcase
   end
   if (Type == 2'b11) begin
@@ -71,21 +82,6 @@ always_comb begin
       'b0: //mov
         rslt = inA;
     endcase
-  end
-end
-
-always_ff @(Type, A_op, inA, inB) begin
-  if (Type == 2'b10 && A_op == 3'b100) begin
-    // Compare inA and inB
-    if (inA == inB) begin
-      cmp_src = 2'b00; // beq
-    end else if (inA > inB) begin
-      cmp_src = 2'b01; // bg
-    end else if (inA < inB) begin
-      cmp_src = 2'b10; // bl
-    end else if (inA != inB) begin
-      cmp_src = 2'b11; // bne
-    end
   end
 end
    
