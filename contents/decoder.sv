@@ -1,1 +1,0 @@
-//go from instr_rom to decoder to control and reg file

@@ -1,0 +1,69 @@
+module tb_top_level();
+
+  // Parameters for the top_level module
+  parameter D = 12;
+  parameter A = 3;
+
+  // Testbench signals
+  reg clk;
+  reg reset;
+  reg req;
+  wire done;
+
+  // Instantiate the top_level module
+  top_level #(.D(D), .A(A)) uut (
+    .clk(clk),
+    .reset(reset),
+    .req(req),
+    .done(done)
+  );
+   initial begin 
+	uut.core[]
+   end
+
+  // Clock generation
+  initial begin
+    clk = 0;
+    forever #5 clk = ~clk; // 100 MHz clock
+  end
+
+  // Test procedure
+  initial begin
+    // Initialize signals
+    reset = 1;
+    req = 0;
+
+    // Apply reset
+    #10 reset = 0;
+    #10 reset = 1;
+
+    // Test case 1: Simple operation
+    #10 req = 1; // Start the operation
+
+    // Wait for 'done' signal
+    wait(done);
+    #10 req = 0;
+
+    // Test case 2: Another operation
+    #10 req = 1;
+
+    // Wait for 'done' signal
+    wait(done);
+    #10 req = 0;
+
+    // End of simulation
+    #10 $finish;
+  end
+
+  // Monitor signals
+  initial begin
+    $monitor("Time: %0t | clk: %b | reset: %b | req: %b | done: %b", $time, clk, reset, req, done);
+  end
+
+  // VCD dump for waveform analysis
+  initial begin
+    $dumpfile("tb_top_level.vcd");
+    $dumpvars(0, tb_top_level);
+  end
+
+endmodule

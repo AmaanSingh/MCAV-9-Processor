@@ -1,4 +1,5 @@
-//I don't think we need this file but who knows
+//I don't think we need this file but who knows'
+/*
 11111            Waldo
 
 11110000
@@ -10,3 +11,4 @@
 
 00111110       1
 01111110       2	overlap question
+*/

@@ -18,7 +18,7 @@ module alu_tb;
 
   // Instantiate the alu module
   alu dut (
-    .alu_cmd(alu_cmd),
+    //.alu_cmd(alu_cmd),
     .Type(Type),
     .M_op(M_op),
     .C_op(C_op),
@@ -52,61 +52,44 @@ module alu_tb;
 
     // Apply stimulus
     #10;
-    alu_cmd = 3'b001;
+    //alu_cmd = 3'b001;
+    M_op = 3'b001;
     inA = 8'b00000001;
     inB = 8'b00000001;
     #10;
-    alu_cmd = 3'b010;
+    //alu_cmd = 3'b010;
+    M_op = 3'b010;
     inA = 8'b10101010;
     inB = 8'b01010101;
     #10;
-    alu_cmd = 3'b011;
+    //alu_cmd = 3'b011;
+    M_op = 3'b011;
     inA = 8'b10101010;
     inB = 8'b01010101;
     #10;
-    alu_cmd = 3'b100;
+    //alu_cmd = 3'b100;
+    M_op = 3'b100;
     inA = 8'b00000001;
     inB = 8'b00000001;
     #10;
-    alu_cmd = 3'b101;
+    //alu_cmd = 3'b101;
+    M_op = 3'b101;
+    inA = 8'b00000001;
+    inB = 8'b00000011;
+    #10;
+    //alu_cmd = 3'b110;
+    M_op = 3'b110;
+    inA = 8'b00000001;
+    inB = 8'b00001001;
+    #10;
+    //alu_cmd = 3'b111;
+    M_op = 3'b111;
     inA = 8'b00000001;
     #10;
-    alu_cmd = 3'b110;
-    inA = 8'b00000001;
-    #10;
-    alu_cmd = 3'b111;
-    inA = 8'b00000001;
-    #10;
-    alu_cmd = 3'b000;
-    inA = 8'b00000001;
-    inB = 8'b00000001;
-    sc_i = 1'b1;
-    #10;
-    alu_cmd = 3'b001;
-    inA = 8'b00000001;
-    inB = 8'b00000001;
-    sc_i = 1'b1;
-    #10;
-    alu_cmd = 3'b010;
-    inA = 8'b10101010;
-    inB = 8'b01010101;
-    #10;
-    alu_cmd = 3'b011;
-    inA = 8'b10101010;
-    inB = 8'b01010101;
-    #10;
-    alu_cmd = 3'b100;
-    inA = 8'b00000001;
-    inB = 8'b00000001;
-    #10;
-    alu_cmd = 3'b101;
-    inA = 8'b00000001;
-    #10;
-    alu_cmd = 3'b110;
-    inA = 8'b00000001;
-    #10;
-    alu_cmd = 3'b111;
-    inA = 8'b00000001;
+    Type = 2'b11;
+    M_op = 3'b111;
+    V_op = 1'b0;
+    inA = 8'b00001111;
     #10;
 
     // End simulation
