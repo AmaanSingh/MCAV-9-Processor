@@ -56,6 +56,12 @@ always_comb begin
   if (Type == 2'b10) begin
     //Assignment
     case(A_op)
+      'b001: //cntr 
+        for (int i = 0; i < 8; i++) begin
+          if (inA[i] == 1) begin
+            rslt = rslt + 1;
+          end
+        end
       'b100: //Cmp
         //{sc_o,rslt} = inA - inB + sc_i;
         if (inA == inB) begin

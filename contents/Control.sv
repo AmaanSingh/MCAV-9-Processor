@@ -174,7 +174,7 @@ always_comb begin
         MemtoReg  =	'b0;
         REGSrc = 'b0;
       end
-      'b001: begin //none
+      'b001: begin //cntr
         RegDst 	=   'b0;   
         Branch 	=   'b0;   
         MemWrite  =	'b0;   
