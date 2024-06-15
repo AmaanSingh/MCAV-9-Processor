@@ -1,24 +1,111 @@
+li $8       //INITIALIZING MIN AND MAX VARIABLES
+add r0 r0 //r0 = 16
+add r0 r0 //r0 = 32
+add r0 r0 //r0 = 64
+add r0 r1 //r1 = 64 (address for min distance)
+li $8
+add r0 r0 // r0 = 16
+store r1 r0 // mem[64] = 16 , min distance = 16
+li $1
+add r0 r1 //r1 = 65 (address for max distance)
 li $0
-mov r0 r3
-mov r0 r2
-mov r0 r1
-mov r0 r5
-li $32
-cmp r2 r0
-bg $1
-mov r2 r0
-rs r0 r1
+store r1 r0 // mem[65] = 0, max distance = 0
+li $1       //INITIALIZING LOOP COUNTER VARIABLES
+add r0 r1 //r1 = 66
+mov r1 r2 // set r2 = 66
+li $0
+store r2 r0 //mem[66] = 0 (i = 0)
 li $1
-and r0 r1
-mov r2 r0
-rs r0 r3
+add r0 r2 //r2 = 67
+li $0
+store r2 r0 //mem[67] = 0 (j = 0)
 li $1
-and r0 r3
-cmp r1 r3
-bne $5
-jmp $4
+add r0 r2 //r2 = 68
+li $0
+store r2 r0 //mem[68] = 0 (k = 0)
+li $2           //Start of OUTER LOOP FOR i
+sub r0 r2 //r2 = 66
+load r3 r2 //r0 = mem[66]
 li $1
-add r0 r3
+add r0 r2 //r2 = 67
+li $12
+sub r0 r2 //67-12 = 55 =r2
+sub r0 r2 //55-12 = 43 =r2
+sub r0 r2 //43-12 = 31 = r2
+mov r2 r0 //r0 = 31 
+mov r1 r2 //r2 = 66 //reset r2 to what it was before
+cmp r3 r0   //compare r3 (i) to r0 (31) 
+bg $1 //BRANCH TO END OF PROGRAM!! jump 73 lines
+li $1           //Start of INNER LOOP FOR j
+add r0 r2 // r2 = 67
+load r2 r2 //Load j from mem[67] into r2
+li $8 
+add r0 r0 //r0=16
+add r0 r0 //r0=24
+add r0 r0 //r0=32
+cmp r2 r0 //compare r2 (j) to r0 (32)
+bg $3 //BRANCH TO "next_i" jump 53 lines ahead
+mov r3 r4 //Store i in r4, load the half-words from memory
+li $2
+mov r4 r3 //store i in r3
+add r3 r3 // r3 = i * 2
+load r3 r3 //Load MSB of n[i] into r2
 li $1
-add r0 r2
-jmp $3
+add r0 r3 // r3 = i * 2 + 1
+load r3 r3 // Load LSB of n[i] into r2
+mov r2 r5 //store j in r5
+li $2 
+mov r5 r2 //store j in 
+add r2 r2 //r2 = j * 2
+load r2 r2 // Load MSB of n[j] into r2
+li $1
+add r0 r3 //r3 = j * 2 + 1
+load r2 r2 // LOAD LSB of n[j] into r2
+xor r3 r2 //Calculate COR of n[i] and n[j], store in r3
+li $2
+add r0 r1 // Increment r1 by 2 to get 68
+store r2 r1 //Store XOR result into mem[68]
+li $0
+store r3 r0 //SetBits = 0
+load r2 r2  //Load XOR result from mem[68] into r2, Start of "count_bits"
+li $1
+and r2 r3
+add r0 r0  
+mov r0 r4  //Increment setbits 
+li $1
+rs r0 r2 //Shift XOR result right by 1
+store r2 r1
+mov r4 r0
+cmp r2 r0 //check if XOR result is zero
+bne $2 //Branch to beginning of count_bits (line 74) Go back 10 lines
+load r0 r1 //Load setBits into r0
+li $4
+sub r0 r1 //Set r1 to 64
+load r1 r1 //Load min distance into r1 (mem[64])
+cmp r0 r1 //compare setbits with min
+bl $7 //branch if setbits < min, go to updateMin (forward 7 lines)
+li $1
+add r0 r1 //Set r1 to 65
+load r1 r1 //Load max distance into r1 (mem[65])
+cmp r0 r1 //compare setbits with max
+bg $8 //branch if setbits > max, go to updateMax, go forward 6 lines
+jmp $4 //Jump to continue_j, go ahead 8 lines
+li $1  //Beginning of updateMin
+sub r0 r1 //Set r1 to 64
+store r0 r1 //Store new min distance in mem[64]
+jmp $5 //Jump to continue_j, go ahead 4 lines
+li $1 //Beginning of updateMax
+add r0 r1 //Set r1 to 65
+load r1 r1 //Load max distance into r1 (mem[65])
+li $2 //beginning of continue_j
+add r0 r1 //Set r1 to 67
+li $1 
+add r0 r2 
+store r2 r1 //store updated j beck to mem[67]
+jmp $0 //Jump to inner_loop_j, go back 66 lines
+li $1  //beginning of next_i
+sub r0 r1 //Set r1 to 66
+add r0 r3 //i += 1
+store r3 r1 //Store updated i back to mem[66]
+jmp $6 //Jump to outer_loop_i
+nop
