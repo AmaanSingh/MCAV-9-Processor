@@ -6,23 +6,23 @@ The architecture name is MCAV-9 Processor. Our overall philosophy is creating CP
 
 1. # <a name="_heading=h.2et92p0"></a> Architectural Overview
 
-[![Architectural Overview](images/2.png)]
+![Architectural Overview](images/2.png)
 
 
 2. # <a name="_heading=h.tyjcwt"></a> Machine Specification
 ## <a name="_heading=h.3dy6vkm"></a>Instruction formats
 
-[![Instruction formats](images/1.png)]
+![Instruction formats](images/1.png)
 
 
 
 <a name="_heading=h.1t3h5sf"></a>
 ## Operations
-[![Operations](images/11.png)]
-[![Operations](images/12.png)]
-[![Operations](images/13.png)]
-[![Operations](images/14.png)]
-[![Operations](images/15.png)]
+![Operations](images/11.png)
+![Operations](images/12.png)
+![Operations](images/13.png)
+![Operations](images/14.png)
+![Operations](images/15.png)
 
 
 
